@@ -1,2 +1,6 @@
 requests
 pyqt6>=6.7.1
+winrt-runtime ; sys_platform == 'win32'
+winrt-Windows.Foundation ; sys_platform == 'win32'
+winrt-Windows.Data.Xml.Dom ; sys_platform == 'win32'
+winrt-Windows.UI.Notifications ; sys_platform == 'win32'
