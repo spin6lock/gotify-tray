@@ -14,6 +14,8 @@ DEFAULT_SETTINGS = {
     "shortcuts/quit": "Ctrl+Q",
     "tray/notifications/priority": 5,
     "tray/notifications/duration_ms": 5000,
+    # Windows 上用 WinRT 常驻 toast (不点掉不消失)；关掉后回退普通气泡
+    "tray/notifications/sticky": True,
     "tray/notifications/icon/show": True,
     "tray/notifications/click": True,
     "tray/icon/unread": False,

@@ -20,6 +20,7 @@ from gotify_tray.tasks import (
     ProcessMessageTask,
     ServerConnectionWatchdogTask,
 )
+from gotify_tray.gui.sticky_toast import show_sticky
 from gotify_tray.gui.themes import set_theme
 from gotify_tray.utils import get_icon, verify_server
 from PyQt6 import QtCore, QtGui, QtWidgets, QtMultimedia
@@ -255,7 +256,13 @@ class MainApplication(QtWidgets.QApplication):
 
         if settings.value("sound/enabled"):
             self.audio.play()
-            
+
+        # 常驻 toast：Windows 上用 WinRT 通知，不点掉不消失；失败回退托盘气泡
+        if settings.value("tray/notifications/sticky", type=bool) and show_sticky(
+            message.title, message.message
+        ):
+            return
+
         self.tray.showMessage(
             message.title,
             message.message,
