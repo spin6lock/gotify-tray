@@ -6,6 +6,15 @@ on:
       - 'release'
     tags-ignore:
       - '*'
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
 
@@ -13,6 +22,8 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref || github.ref }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -26,32 +37,39 @@ jobs:
       shell: bash
     - name: Build
       run: |
-        powershell -File build-win.ps1
-        mv inno-output\gotify-tray-installer.exe gotify-tray-installer-win.exe
-      shell: cmd
+        & .\build-win.ps1
+        Move-Item inno-output\gotify-tray-installer.exe gotify-tray-installer-win.exe
+      shell: pwsh
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: gotify-tray-installer-win.exe
         path: gotify-tray-installer-win.exe
+        if-no-files-found: error
 
   build-pip:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref || github.ref }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
           python-version: '3.13'
     - name: Upgrade pip and enable wheel support
       run: python -m pip install --upgrade pip setuptools wheel
-    - name: install requirements
-      run: |
-        pip install -r requirements.txt
-        pip install build
+    - name: Install build tools
+      run: python -m pip install build
     - name: create pip package
       run: python -m build
+    - name: Smoke test wheel
+      run: |
+        python -m pip install dist/*.whl
+        test "$(gotify-tray --version)" = "$(cat version.txt)"
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
+        name: python-wheel
         path: dist/gotify_tray-*.whl
+        if-no-files-found: error

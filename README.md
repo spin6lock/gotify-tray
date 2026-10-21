@@ -7,7 +7,7 @@ A tray notification application for receiving messages from a [Gotify server](ht
 ## Getting started
 
 
-- [Download the latest release.](https://github.com/seird/gotify-tray/releases/latest)
+- [Download the latest release.](https://github.com/spin6lock/gotify-tray/releases/latest)
 
 - or, install via pip:
     ```shell

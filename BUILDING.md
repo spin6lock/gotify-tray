@@ -72,3 +72,19 @@ $ pyinstaller gotify-tray.spec
     ```shell
     $ gotify-tray
     ```
+
+# GitHub Releases (spin6lock fork)
+
+The build workflow creates a Windows installer and a Python wheel. The wheel is
+installed and checked with `gotify-tray --version` before it is uploaded.
+
+Push a version tag to publish both files to this fork's GitHub Releases:
+
+```shell
+git tag v0.5.3
+git push origin v0.5.3
+```
+
+For an existing tag, run the `release` workflow manually and provide that tag.
+The tag must exist, and its GitHub Release must not already exist.
+This fork's release workflow does not publish to the upstream PyPI project.
